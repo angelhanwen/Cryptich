@@ -1,58 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cryptich – Coming Soon</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cryptich – Crypto-Backed Credit (Coming Soon)</title>
+  <meta name="description" content="Cryptich is a non-custodial, crypto-backed credit platform. Spend without selling — user-controlled custody, simple card experience." />
+
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="Cryptich – Crypto-Backed Credit (Coming Soon)" />
+  <meta property="og:description" content="Crypto-backed credit. Instant liquidity, user-controlled custody. Join the waitlist." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://cryptich.com" />
+  <meta property="og:image" content="https://cryptich.com/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Cryptich – Crypto-Backed Credit" />
+  <meta name="twitter:description" content="Spend without selling. Join the waitlist." />
+  <meta name="twitter:image" content="https://cryptich.com/og-image.png" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" />
+
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #0d0d0d;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #0d0f0f;
+      color: #fff;
       text-align: center;
+      padding: 50px 20px;
     }
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
-    p {
-      font-size: 1.25rem;
-      color: #ccc;
-    }
-    .email {
-      margin-top: 2rem;
-    }
+    h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+    p { font-size: 1.2rem; color: #ccc; }
+    form { margin-top: 2rem; }
     input, button {
-      padding: 10px;
-      font-size: 1rem;
+      padding: 12px;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
+      font-size: 1rem;
     }
     input {
       width: 250px;
       margin-right: 8px;
     }
     button {
-      background: #06f;
-      color: white;
+      background: #4f8cff;
+      color: #fff;
       cursor: pointer;
+    }
+    footer {
+      margin-top: 2rem;
+      color: #777;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
   <h1>Cryptich</h1>
-  <p>Building the future of crypto-backed credit. Coming soon.</p>
-  <div class="email">
-    <form action="https://formspree.io/f/yourFormID" method="POST">
-      <input type="email" name="email" placeholder="Enter your email" required>
-      <button type="submit">Notify Me</button>
-    </form>
-  </div>
+  <p>Crypto-backed credit. Instant liquidity, user-controlled custody.</p>
+
+  <form action="https://formspree.io/f/YOUR-FORMSPREE-ID" method="POST">
+    <input type="email" name="email" placeholder="Enter your email" required />
+    <button type="submit">Join Waitlist</button>
+  </form>
+
+  <footer>
+    <p>Contact: <a href="mailto:hello@cryptich.com">hello@cryptich.com</a> · © <span id="year"></span> Cryptich</p>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
