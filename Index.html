@@ -4,102 +4,186 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cryptich</title>
+  <meta name="description" content="Be the first to know when Cryptich launches." />
   <style>
-    body { margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial; }
-    .hero { min-height:100vh; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:16px; padding:24px; text-align:center; }
-    .row { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
-    input, button, textarea { font:inherit; padding:10px 14px; border-radius:10px; border:1px solid #ddd; }
-    button { border:0; background:#111; color:#fff; cursor:pointer; }
-    button:disabled { opacity:.6; cursor:not-allowed; }
+    :root{
+      --bg:#ffffff;
+      --fg:#0f1115;
+      --muted:#636a74;
+      --card:#f7f8fa;
+      --border:#e6e8ec;
+      --radius:16px;
+      --space: clamp(16px, 2vw, 28px);
+      --maxw: 1100px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial; color:var(--fg); background:var(--bg); line-height:1.5}
+    .container{max-width:var(--maxw); margin:0 auto; padding:0 var(--space)}
+    .hero{
+      min-height: 88vh; display:grid; place-items:center; text-align:center;
+      background: radial-gradient(80% 80% at 50% 10%, #f3f5f8 0%, #fff 60%);
+      padding: calc(var(--space) * 2) var(--space);
+    }
+    .hero-inner{display:grid; gap: clamp(12px, 2.2vh, 20px); max-width: 760px; margin:auto}
+    .eyebrow{letter-spacing:.08em; text-transform:uppercase; font-size:12px; color:var(--muted)}
+    h1{font-size: clamp(28px, 5.5vw, 48px); margin:0}
+    .sub{font-size: clamp(16px, 2.2vw, 20px); color:var(--muted); margin:0}
+    .gate{display:flex; gap:8px; justify-content:center; margin-top: 10px; flex-wrap:wrap}
+    input[type="email"], input[type="text"], textarea{
+      font:inherit; padding:12px 14px; border-radius:12px; border:1px solid var(--border); min-width: 260px;
+    }
+    button{
+      font:inherit; padding:12px 18px; border-radius:12px; border:0; background:#111; color:#fff; cursor:pointer;
+    }
+    button:disabled{opacity:.65; cursor:not-allowed}
+
+    /* Sections */
+    section{padding: calc(var(--space) * 2) 0}
+    .card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding: clamp(16px, 2vw, 24px)}
+    .grid{display:grid; gap:var(--space)}
+    .grid-3{grid-template-columns: repeat(1,minmax(0,1fr))}
+    @media (min-width: 800px){ .grid-3{grid-template-columns: repeat(3,minmax(0,1fr))} }
+    .step h3{margin:.25rem 0 .25rem; font-size:18px}
+    .muted{color:var(--muted)}
 
     /* Modal */
-    .backdrop { position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:center; justify-content:center; padding:16px; }
-    .modal { width:100%; max-width:520px; background:#fff; border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,.2); overflow:hidden; }
-    .modal header, .modal footer { padding:16px 20px; }
-    .modal header { border-bottom:1px solid #eee; display:flex; align-items:center; justify-content:space-between; }
-    .modal .content { padding:20px; display:grid; gap:12px; }
-    .close { background:transparent; color:#555; border:0; font-size:20px; cursor:pointer; }
+    .backdrop{position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:center; justify-content:center; padding:16px}
+    .modal{width:100%; max-width:520px; background:#fff; border-radius:var(--radius); box-shadow:0 10px 28px rgba(0,0,0,.18); overflow:hidden}
+    .modal header, .modal footer{padding:16px 20px}
+    .modal header{border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between}
+    .modal .content{padding:20px; display:grid; gap:12px}
+    .close{background:transparent; color:#555; border:0; font-size:22px; cursor:pointer}
+    .sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
   </style>
 </head>
 <body>
-  <main class="hero">
-    <h1>Cryptich</h1>
-    <p>Join the waitlist for early updates and exclusive access.</p>
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-inner container">
+      <div class="eyebrow">Early access</div>
+      <h1>Be the first to know when Cryptich launches.</h1>
+      <p class="sub">A new way to unlock your crypto without giving it up.</p>
 
-    <!-- Email gate just opens the modal -->
-    <form id="gate" class="row">
-      <input id="gateEmail" type="email" placeholder="you@example.com" required />
-      <button type="submit">Continue</button>
-    </form>
-  </main>
+      <!-- Email gate: opens modal -->
+      <form id="gate" class="gate" autocomplete="on" novalidate>
+        <label class="sr-only" for="gateEmail">Email</label>
+        <input id="gateEmail" type="email" placeholder="you@example.com" required />
+        <button type="submit" aria-haspopup="dialog" aria-controls="waitlist-modal">Join the waitlist</button>
+      </form>
+    </div>
+  </header>
 
-  <!-- Modal with the actual Netlify form -->
+  <!-- MINI “WHAT IS” -->
+  <section class="container">
+    <div class="card">
+      <h2 style="margin:0 0 .25rem 0;">What is Cryptich?</h2>
+      <p class="muted" style="margin:.25rem 0 0 0;">
+        Cryptich is a virtual banking platform that lets you access and spend your crypto as easily as cash — while keeping it secure in the background.
+      </p>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS (TEASER) -->
+  <section class="container">
+    <h2 style="margin:0 0 .5rem 0;">How it works</h2>
+    <div class="grid grid-3">
+      <div class="card step">
+        <h3>1) Deposit</h3>
+        <p class="muted">Secure your crypto with Cryptich.</p>
+      </div>
+      <div class="card step">
+        <h3>2) Access</h3>
+        <p class="muted">Unlock instant liquidity when you need it.</p>
+      </div>
+      <div class="card step">
+        <h3>3) Spend</h3>
+        <p class="muted">Use your balance like cash — anytime, anywhere.</p>
+      </div>
+    </div>
+    <p class="muted" style="margin-top: .75rem;">That’s all we can share for now. Join for early updates and the full story.</p>
+  </section>
+
+  <!-- REPEATED CTA -->
+  <section class="container" style="padding-top:0">
+    <div class="card" style="display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap">
+      <p style="margin:0">Don’t miss the launch.</p>
+      <form id="gate2" class="gate" autocomplete="on" novalidate>
+        <label class="sr-only" for="gateEmail2">Email</label>
+        <input id="gateEmail2" type="email" placeholder="you@example.com" required />
+        <button type="submit" aria-haspopup="dialog" aria-controls="waitlist-modal">Join the waitlist</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- MODAL: Real Netlify form (no JS submit) -->
   <div id="backdrop" class="backdrop" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" id="waitlist-modal">
       <header>
-        <h2 id="modalTitle">Get notified</h2>
+        <h2 id="modalTitle" style="margin:0">Get notified</h2>
         <button class="close" aria-label="Close" onclick="closeModal()">&times;</button>
       </header>
+
       <div class="content">
-        <!-- Netlify form (no JS submit) -->
+        <!-- Netlify Form -->
         <form name="contact"
               method="POST"
               action="/thank-you.html"
               data-netlify="true"
               data-netlify-honeypot="bot-field">
-          <!-- must match form name -->
+          <!-- Required for Netlify -->
           <input type="hidden" name="form-name" value="contact" />
-          <!-- honeypot -->
+          <!-- Honeypot -->
           <input type="text" name="bot-field" style="display:none" tabindex="-1" autocomplete="off" />
 
-          <label>
-            Email
+          <label>Email
             <input id="modalEmail" type="email" name="email" required />
           </label>
-          <label>
-            Name (optional)
+
+          <label class="muted">Name (optional)
             <input type="text" name="name" placeholder="Your name" />
           </label>
+
           <button type="submit">Notify me</button>
         </form>
       </div>
+
       <footer>
-        <small>Protected by Netlify Forms</small>
+        <small class="muted">Protected by Netlify Forms</small>
       </footer>
     </div>
   </div>
 
   <script>
-    const gate = document.getElementById('gate');
-    const gateEmail = document.getElementById('gateEmail');
-    const modalEmail = document.getElementById('modalEmail');
+    // Core behavior: gate opens modal & pre-fills email. Submission handled by Netlify redirect.
     const backdrop = document.getElementById('backdrop');
+    const modalEmail = document.getElementById('modalEmail');
+    const gates = [
+      { form: document.getElementById('gate'), input: document.getElementById('gateEmail') },
+      { form: document.getElementById('gate2'), input: document.getElementById('gateEmail2') }
+    ].filter(Boolean);
 
-    gate.addEventListener('submit', (e) => {
-      e.preventDefault();
-      // Prefill modal email with the gate value
-      modalEmail.value = gateEmail.value.trim();
-      openModal();
+    gates.forEach(({form, input})=>{
+      form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        if (!input.checkValidity()) { input.reportValidity(); return; }
+        modalEmail.value = (input.value || '').trim();
+        openModal();
+      });
     });
 
-    function openModal() {
+    function openModal(){
       backdrop.style.display = 'flex';
       backdrop.setAttribute('aria-hidden', 'false');
       modalEmail.focus();
     }
-    function closeModal() {
+    function closeModal(){
       backdrop.style.display = 'none';
       backdrop.setAttribute('aria-hidden', 'true');
     }
-
-    // Close on Escape
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && backdrop.style.display === 'flex') closeModal();
-    });
-    // Close on click outside
-    backdrop.addEventListener('click', (e) => {
-      if (e.target === backdrop) closeModal();
-    });
+    // Close via Escape
+    document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape' && backdrop.style.display==='flex') closeModal(); });
+    // Close on backdrop click
+    backdrop.addEventListener('click', (e)=>{ if (e.target === backdrop) closeModal(); });
   </script>
 </body>
 </html>
