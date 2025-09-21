@@ -3,71 +3,155 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cryptich – Crypto-Backed Credit (Coming Soon)</title>
-  <meta name="description" content="Cryptich is a non-custodial, crypto-backed credit platform. Spend without selling — user-controlled custody, simple card experience." />
-
-  <!-- Open Graph / Social -->
-  <meta property="og:title" content="Cryptich – Crypto-Backed Credit (Coming Soon)" />
-  <meta property="og:description" content="Crypto-backed credit. Instant liquidity, user-controlled custody. Join the waitlist." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://cryptich.com" />
-  <meta property="og:image" content="https://cryptich.com/og-image.png" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Cryptich – Crypto-Backed Credit" />
-  <meta name="twitter:description" content="Spend without selling. Join the waitlist." />
-  <meta name="twitter:image" content="https://cryptich.com/og-image.png" />
-
-  <!-- Favicon -->
-  <link rel="icon" href="/favicon.ico" />
-
+  <title>Cryptich</title>
   <style>
-    body {
-      font-family: system-ui, sans-serif;
-      background: #0d0f0f;
-      color: #fff;
-      text-align: center;
-      padding: 50px 20px;
-    }
-    h1 { font-size: 2.5rem; margin-bottom: 1rem; }
-    p { font-size: 1.2rem; color: #ccc; }
-    form { margin-top: 2rem; }
-    input, button {
-      padding: 12px;
-      border: none;
-      border-radius: 6px;
-      font-size: 1rem;
-    }
-    input {
-      width: 250px;
-      margin-right: 8px;
-    }
-    button {
-      background: #4f8cff;
-      color: #fff;
-      cursor: pointer;
-    }
-    footer {
-      margin-top: 2rem;
-      color: #777;
-      font-size: 0.9rem;
-    }
+    /* Basic landing hero */
+    body { margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial; }
+    .hero { min-height:100vh; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:16px; padding:24px; text-align:center; }
+    .row { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+    input, button, textarea { font:inherit; padding:10px 14px; border-radius:10px; border:1px solid #ddd; }
+    button { border:0; background:#111; color:#fff; cursor:pointer; }
+    button:disabled { opacity:.6; cursor:not-allowed; }
+
+    /* Modal */
+    .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:center; justify-content:center; padding:16px; }
+    .modal { width:100%; max-width:520px; background:#fff; border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,.2); overflow:hidden; }
+    .modal header, .modal footer { padding:16px 20px; }
+    .modal header { border-bottom:1px solid #eee; display:flex; align-items:center; justify-content:space-between; }
+    .modal .content { padding:20px; display:grid; gap:12px; }
+    .close { background:transparent; color:#555; border:0; font-size:20px; cursor:pointer; }
+    .success { background:#f6ffed; border:1px solid #b7eb8f; padding:12px; border-radius:10px; display:none; }
+    .hidden { display:none !important; }
+    /* Hide the “real” (Netlify-detected) form off-screen but still in DOM */
+    .offscreen { position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden; }
   </style>
 </head>
 <body>
-  <h1>Cryptich</h1>
-  <p>Crypto-backed credit. Instant liquidity, user-controlled custody.</p>
+  <main class="hero">
+    <h1>Cryptich</h1>
+    <p>Enter your email to continue.</p>
+    <form id="email-gate" class="row" onsubmit="openModal(event)">
+      <input id="gateEmail" type="email" name="gate-email" placeholder="you@example.com" required />
+      <button type="submit">Continue</button>
+    </form>
+    <p id="inlineSuccess" class="success">Thanks! We received your message.</p>
+  </main>
 
-  <form action="https://formspree.io/f/YOUR-FORMSPREE-ID" method="POST">
-    <input type="email" name="email" placeholder="Enter your email" required />
-    <button type="submit">Join Waitlist</button>
+  <!-- Modal (popup) with the full Netlify form -->
+  <div id="modalBackdrop" class="modal-backdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <header>
+        <h2 id="modalTitle">Contact Cryptich</h2>
+        <button class="close" aria-label="Close" onclick="closeModal()">&times;</button>
+      </header>
+      <div class="content">
+        <!-- This is the actual Netlify form. It’s hidden by default until modal opens. -->
+        <form id="contactForm"
+              name="contact"
+              method="POST"
+              data-netlify="true"
+              netlify
+              onsubmit="submitNetlify(event)">
+          <!-- Required: must match the form’s name -->
+          <input type="hidden" name="form-name" value="contact" />
+          <!-- Optional honeypot to reduce spam -->
+          <input type="text" name="bot-field" class="hidden" tabindex="-1" autocomplete="off" />
+          <label>
+            Email
+            <input id="contactEmail" type="email" name="email" required />
+          </label>
+          <label>
+            Name
+            <input type="text" name="name" placeholder="Your name" required />
+          </label>
+          <label>
+            Message
+            <textarea name="message" placeholder="Tell us a bit more..." required></textarea>
+          </label>
+          <button type="submit" id="submitBtn">Send</button>
+        </form>
+        <div id="modalSuccess" class="success">Thanks — we’ll be in touch soon!</div>
+      </div>
+      <footer>
+        <small>Protected by Netlify Forms</small>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Offscreen duplicate (optional but recommended):
+       Some sites prefer a tiny hidden copy so Netlify always detects the form
+       even if JS alters the visible one. This ensures detection on build. -->
+  <form name="contact" data-netlify="true" class="offscreen">
+    <input type="hidden" name="form-name" value="contact" />
+    <input type="text" name="name" />
+    <input type="email" name="email" />
+    <textarea name="message"></textarea>
   </form>
 
-  <footer>
-    <p>Contact: <a href="mailto:hello@cryptich.com">hello@cryptich.com</a> · © <span id="year"></span> Cryptich</p>
-  </footer>
-
   <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
+    const backdrop = document.getElementById('modalBackdrop');
+    const gateEmail = document.getElementById('gateEmail');
+    const contactEmail = document.getElementById('contactEmail');
+    const contactForm = document.getElementById('contactForm');
+    const inlineSuccess = document.getElementById('inlineSuccess');
+    const modalSuccess = document.getElementById('modalSuccess');
+    const submitBtn = document.getElementById('submitBtn');
+
+    function openModal(e) {
+      e.preventDefault();
+      // Prefill the email in the modal form
+      contactEmail.value = gateEmail.value.trim();
+      backdrop.style.display = 'flex';
+      backdrop.setAttribute('aria-hidden', 'false');
+      contactEmail.focus();
+    }
+
+    function closeModal() {
+      backdrop.style.display = 'none';
+      backdrop.setAttribute('aria-hidden', 'true');
+    }
+
+    // Escape to close
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && backdrop.style.display === 'flex') closeModal();
+    });
+    // Click outside to close
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) closeModal();
+    });
+
+    // Submit via fetch to stay on page (AJAX post to Netlify)
+    async function submitNetlify(e) {
+      e.preventDefault();
+      submitBtn.disabled = true;
+
+      // Netlify requires URL-encoded body with the form-name field
+      const formData = new FormData(contactForm);
+      const params = new URLSearchParams(formData).toString();
+
+      try {
+        const resp = await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: params
+        });
+
+        if (resp.ok) {
+          contactForm.classList.add('hidden');
+          modalSuccess.style.display = 'block';
+          // Also show a small success on the landing area if you want:
+          inlineSuccess.style.display = 'block';
+          // Optionally auto-close after a short delay
+          setTimeout(closeModal, 1500);
+        } else {
+          alert('Submission failed. Please try again.');
+        }
+      } catch (err) {
+        alert('Network error. Please try again.');
+      } finally {
+        submitBtn.disabled = false;
+      }
+    }
   </script>
 </body>
 </html>
