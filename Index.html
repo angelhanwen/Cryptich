@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cryptich</title>
   <style>
-    /* Basic landing hero */
     body { margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial; }
     .hero { min-height:100vh; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:16px; padding:24px; text-align:center; }
     .row { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
@@ -22,8 +21,6 @@
     .close { background:transparent; color:#555; border:0; font-size:20px; cursor:pointer; }
     .success { background:#f6ffed; border:1px solid #b7eb8f; padding:12px; border-radius:10px; display:none; }
     .hidden { display:none !important; }
-    /* Hide the “real” (Netlify-detected) form off-screen but still in DOM */
-    .offscreen { position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden; }
   </style>
 </head>
 <body>
@@ -37,7 +34,7 @@
     <p id="inlineSuccess" class="success">Thanks! We received your message.</p>
   </main>
 
-  <!-- Modal (popup) with the full Netlify form -->
+  <!-- Modal -->
   <div id="modalBackdrop" class="modal-backdrop" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <header>
@@ -45,16 +42,14 @@
         <button class="close" aria-label="Close" onclick="closeModal()">&times;</button>
       </header>
       <div class="content">
-        <!-- This is the actual Netlify form. It’s hidden by default until modal opens. -->
+        <!-- Netlify form -->
         <form id="contactForm"
               name="contact"
               method="POST"
               data-netlify="true"
-              netlify
+              data-netlify-honeypot="bot-field"
               onsubmit="submitNetlify(event)">
-          <!-- Required: must match the form’s name -->
           <input type="hidden" name="form-name" value="contact" />
-          <!-- Optional honeypot to reduce spam -->
           <input type="text" name="bot-field" class="hidden" tabindex="-1" autocomplete="off" />
           <label>
             Email
@@ -78,16 +73,6 @@
     </div>
   </div>
 
-  <!-- Offscreen duplicate (optional but recommended):
-       Some sites prefer a tiny hidden copy so Netlify always detects the form
-       even if JS alters the visible one. This ensures detection on build. -->
-  <form name="contact" data-netlify="true" class="offscreen">
-    <input type="hidden" name="form-name" value="contact" />
-    <input type="text" name="name" />
-    <input type="email" name="email" />
-    <textarea name="message"></textarea>
-  </form>
-
   <script>
     const backdrop = document.getElementById('modalBackdrop');
     const gateEmail = document.getElementById('gateEmail');
@@ -99,7 +84,6 @@
 
     function openModal(e) {
       e.preventDefault();
-      // Prefill the email in the modal form
       contactEmail.value = gateEmail.value.trim();
       backdrop.style.display = 'flex';
       backdrop.setAttribute('aria-hidden', 'false');
@@ -111,37 +95,32 @@
       backdrop.setAttribute('aria-hidden', 'true');
     }
 
-    // Escape to close
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && backdrop.style.display === 'flex') closeModal();
     });
-    // Click outside to close
+
     backdrop.addEventListener('click', (e) => {
       if (e.target === backdrop) closeModal();
     });
 
-    // Submit via fetch to stay on page (AJAX post to Netlify)
     async function submitNetlify(e) {
       e.preventDefault();
       submitBtn.disabled = true;
 
-      // Netlify requires URL-encoded body with the form-name field
       const formData = new FormData(contactForm);
-      const params = new URLSearchParams(formData).toString();
+      const body = new URLSearchParams(formData).toString();
 
       try {
         const resp = await fetch('/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: params
+          body
         });
 
-        if (resp.ok) {
+        if (resp.ok || resp.status === 303) {
           contactForm.classList.add('hidden');
           modalSuccess.style.display = 'block';
-          // Also show a small success on the landing area if you want:
           inlineSuccess.style.display = 'block';
-          // Optionally auto-close after a short delay
           setTimeout(closeModal, 1500);
         } else {
           alert('Submission failed. Please try again.');
