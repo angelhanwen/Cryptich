@@ -46,6 +46,7 @@
         <form id="contactForm"
               name="contact"
               method="POST"
+              action="/"
               data-netlify="true"
               data-netlify-honeypot="bot-field"
               onsubmit="submitNetlify(event)">
@@ -95,14 +96,16 @@
       backdrop.setAttribute('aria-hidden', 'true');
     }
 
+    // Close on Escape
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && backdrop.style.display === 'flex') closeModal();
     });
-
+    // Close when clicking backdrop
     backdrop.addEventListener('click', (e) => {
       if (e.target === backdrop) closeModal();
     });
 
+    // Robust Netlify submission handler
     async function submitNetlify(e) {
       e.preventDefault();
       submitBtn.disabled = true;
@@ -111,22 +114,29 @@
       const body = new URLSearchParams(formData).toString();
 
       try {
-        const resp = await fetch('/', {
+        const resp = await fetch(contactForm.getAttribute('action') || '/', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'text/html'
+          },
           body
         });
 
-        if (resp.ok || resp.status === 303) {
+        // Treat 200 and common redirect statuses as success
+        if (resp.ok || [301, 302, 303].includes(resp.status)) {
           contactForm.classList.add('hidden');
           modalSuccess.style.display = 'block';
           inlineSuccess.style.display = 'block';
           setTimeout(closeModal, 1500);
         } else {
           alert('Submission failed. Please try again.');
+          // Optional: open console to inspect details
+          console.warn('Netlify response:', resp.status, await resp.text());
         }
       } catch (err) {
         alert('Network error. Please try again.');
+        console.error(err);
       } finally {
         submitBtn.disabled = false;
       }
