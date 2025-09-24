@@ -93,6 +93,38 @@
     @media (prefers-reduced-motion: reduce){
       *{ animation:none !important; transition:none !important }
     }
+	/* === Thank-you page typography tune === */
+.card h1{
+  /* smaller, tighter, more premium */
+  font-size: clamp(28px, 4.4vw, 40px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+  margin: .25rem auto .5rem;
+  /* keep a pleasant measure + nicer wrapping */
+  max-width: 22ch;
+  text-wrap: balance;             /* modern browsers */
+}
+
+.card p{
+  font-size: clamp(14px, 1.6vw, 18px);
+  line-height: 1.6;
+  letter-spacing: 0;
+  margin: .5rem auto;
+  color: var(--muted);
+  max-width: 56ch;                /* readable line length */
+}
+
+.actions .btn{
+  font-weight: 600;
+  padding: 12px 18px;
+  border-radius: 12px;
+}
+
+/* card padding a touch larger on narrow screens */
+@media (max-width: 480px){
+  .card{ padding: 28px 20px; }
+}
   </style>
 </head>
 <body>
