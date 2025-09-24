@@ -20,55 +20,164 @@
   <meta name="twitter:image" content="https://cryptich.com/og-image.png" />
 
   <style>
+  /* ===== Design tokens ===== */
+  :root{
+    --bg: #ffffff;
+    --fg: #0f1115;
+    --muted: #636a74;
+    --accent: #0f7e8a;        /* teal accent */
+    --card: #f7f8fa;
+    --border: #e6e8ec;
+    --radius: 16px;
+    --shadow-sm: 0 1px 2px rgba(16, 24, 40, .06);
+    --shadow-md: 0 8px 24px rgba(16, 24, 40, .10);
+    --space: clamp(16px, 2vw, 28px);
+    --maxw: 1100px;
+  }
+
+  @media (prefers-color-scheme: dark){
     :root{
-      --bg:#ffffff;
-      --fg:#0f1115;
-      --muted:#636a74;
-      --card:#f7f8fa;
-      --border:#e6e8ec;
-      --radius:16px;
-      --space: clamp(16px, 2vw, 28px);
-      --maxw: 1100px;
+      --bg: #0b0e12;
+      --fg: #eef2f6;
+      --muted: #98a2b3;
+      --accent: #21b1bf;
+      --card: #12161d;
+      --border: #1e2430;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+      --shadow-md: 0 10px 30px rgba(0,0,0,.45);
     }
-    *{box-sizing:border-box}
-    body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial; color:var(--fg); background:var(--bg); line-height:1.5}
-    .container{max-width:var(--maxw); margin:0 auto; padding:0 var(--space)}
-    .hero{
-      min-height: 88vh; display:grid; place-items:center; text-align:center;
-      background: radial-gradient(80% 80% at 50% 10%, #f3f5f8 0%, #fff 60%);
-      padding: calc(var(--space) * 2) var(--space);
-    }
-    .hero-inner{display:grid; gap: clamp(12px, 2.2vh, 20px); max-width: 760px; margin:auto}
-    .eyebrow{letter-spacing:.08em; text-transform:uppercase; font-size:12px; color:var(--muted)}
-    h1{font-size: clamp(28px, 5.5vw, 48px); margin:0}
-    .sub{font-size: clamp(16px, 2.2vw, 20px); color:var(--muted); margin:0}
-    .gate{display:flex; gap:8px; justify-content:center; margin-top: 10px; flex-wrap:wrap}
-    input[type="email"], input[type="text"], textarea{
-      font:inherit; padding:12px 14px; border-radius:12px; border:1px solid var(--border); min-width: 260px;
-    }
-    button{
-      font:inherit; padding:12px 18px; border-radius:12px; border:0; background:#111; color:#fff; cursor:pointer;
-    }
-    button:disabled{opacity:.65; cursor:not-allowed}
+  }
 
-    /* Sections */
-    section{padding: calc(var(--space) * 2) 0}
-    .card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding: clamp(16px, 2vw, 24px)}
-    .grid{display:grid; gap:var(--space)}
-    .grid-3{grid-template-columns: repeat(1,minmax(0,1fr))}
-    @media (min-width: 800px){ .grid-3{grid-template-columns: repeat(3,minmax(0,1fr))} }
-    .step h3{margin:.25rem 0 .25rem; font-size:18px}
-    .muted{color:var(--muted)}
+  *{ box-sizing: border-box }
+  html, body{ height:100% }
+  body{
+    margin:0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+    color: var(--fg);
+    background: var(--bg);
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+  }
 
-    /* Modal */
-    .backdrop{position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:center; justify-content:center; padding:16px}
-    .modal{width:100%; max-width:520px; background:#fff; border-radius:var(--radius); box-shadow:0 10px 28px rgba(0,0,0,.18); overflow:hidden}
-    .modal header, .modal footer{padding:16px 20px}
-    .modal header{border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between}
-    .modal .content{padding:20px; display:grid; gap:12px}
-    .close{background:transparent; color:#555; border:0; font-size:22px; cursor:pointer}
-    .sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
-  </style>
+  /* ===== Layout ===== */
+  .container{ max-width: var(--maxw); margin: 0 auto; padding: 0 var(--space) }
+  section{ padding: calc(var(--space) * 2) 0 }
+
+  /* ===== Hero ===== */
+  .hero{
+    min-height: 88vh;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: calc(var(--space) * 2) var(--space);
+    background:
+      radial-gradient(90% 70% at 50% 0%, rgba(33,177,191,.12) 0%, transparent 60%),
+      radial-gradient(70% 60% at 80% 20%, rgba(33,177,191,.08) 0%, transparent 60%),
+      linear-gradient(180deg, rgba(15,126,138,.04), transparent 40%);
+  }
+  .hero-inner{ display:grid; gap: clamp(12px, 2.2vh, 20px); max-width: 760px; margin:auto }
+
+  .eyebrow{
+    letter-spacing:.14em; text-transform:uppercase; font-size:12px; color:var(--muted);
+  }
+  h1{
+    font-size: clamp(32px, 6vw, 56px);
+    line-height: 1.15;
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+  .sub{
+    font-size: clamp(16px, 2.2vw, 20px);
+    color: var(--muted);
+    margin: 0;
+  }
+
+  /* ===== Forms ===== */
+  .gate{
+    display:flex; gap: 10px; justify-content:center; margin-top: 14px; flex-wrap:wrap;
+  }
+  input[type="email"], input[type="text"], textarea{
+    font: inherit;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--fg);
+    min-width: 260px;
+    box-shadow: var(--shadow-sm);
+    transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+  }
+  @media (prefers-color-scheme: dark){
+    input[type="email"], input[type="text"], textarea{ background:#0f131a }
+  }
+  input:focus, textarea:focus{
+    outline: none;
+    border-color: color-mix(in srgb, var(--accent) 60%, var(--border));
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent);
+  }
+
+  button{
+    font: inherit;
+    padding: 12px 18px;
+    border-radius: 12px;
+    border: 0;
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    transition: transform .08s ease, box-shadow .2s ease, opacity .2s ease, background .2s ease;
+  }
+  button:hover{ transform: translateY(-1px) }
+  button:active{ transform: translateY(0) scale(.99) }
+  button:disabled{ opacity:.65; cursor:not-allowed }
+  button:focus-visible{ outline: 3px solid color-mix(in srgb, var(--accent) 40%, transparent) }
+
+  /* ===== Cards & grid ===== */
+  .card{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: clamp(16px, 2vw, 24px);
+    box-shadow: var(--shadow-sm);
+  }
+  .grid{ display:grid; gap: var(--space) }
+  .grid-3{ grid-template-columns: repeat(1, minmax(0,1fr)) }
+  @media (min-width: 800px){
+    .grid-3{ grid-template-columns: repeat(3, minmax(0,1fr)) }
+  }
+  .step h3{ margin:.25rem 0 .25rem; font-size:18px }
+  .muted{ color: var(--muted) }
+
+  /* ===== Modal ===== */
+  .backdrop{
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.55);
+    display: none; align-items: center; justify-content: center; padding: 16px;
+    backdrop-filter: blur(2px);
+  }
+  .modal{
+    width: 100%; max-width: 520px; background: #fff; border-radius: var(--radius);
+    box-shadow: var(--shadow-md); overflow: hidden;
+  }
+  @media (prefers-color-scheme: dark){ .modal{ background:#0f131a } }
+  .modal header, .modal footer{ padding:16px 20px }
+  .modal header{
+    border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between
+  }
+  .modal .content{ padding:20px; display:grid; gap:12px }
+  .close{ background:transparent; color:#555; border:0; font-size:22px; cursor:pointer }
+
+  /* ===== Accessibility niceties ===== */
+  .sr-only{
+    position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+  }
+
+  /* ===== Motion preferences ===== */
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important }
+  }
+</style>
+
 </head>
 <body>
   <!-- HERO -->
