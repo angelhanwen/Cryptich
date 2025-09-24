@@ -176,6 +176,127 @@
   @media (prefers-reduced-motion: reduce){
     *{ animation: none !important; transition: none !important }
   }
+/* ==== Modal form polish ==== */
+.modal .content form{
+  display:grid;
+  grid-template-columns: 1fr;   /* stack on mobile */
+  gap:12px;
+}
+
+/* Make label text above inputs (not inline) */
+.modal .content form label{
+  display:grid;
+  gap:6px;
+  font-weight:600;
+}
+
+/* Inputs full-width and consistent look in dark/light */
+.modal .content form input[type="email"],
+.modal .content form input[type="text"],
+.modal .content form textarea{
+  width:100%;
+  padding:12px 14px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:#fff;
+  color:var(--fg);
+  box-shadow: var(--shadow-sm);
+}
+@media (prefers-color-scheme: dark){
+  .modal .content form input[type="email"],
+  .modal .content form input[type="text"],
+  .modal .content form textarea{
+    background:#0f131a;
+    border-color: #1f2430;
+    color: var(--fg);
+  }
+}
+
+/* Better placeholder contrast in dark mode */
+.modal .content form ::placeholder{
+  color: color-mix(in srgb, var(--muted) 70%, transparent);
+}
+
+/* Focus state (no overflow glow) */
+.modal .content form input:focus,
+.modal .content form textarea:focus{
+  outline:none;
+  border-color: color-mix(in srgb, var(--accent) 60%, var(--border));
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+/* Button fills width on small screens; tightens next to fields on wide */
+.modal .content form button{
+  width:100%;
+}
+@media (min-width: 560px){
+  .modal .content form{
+    grid-template-columns: 1fr; /* keep stacked for clarity */
+  }
+  /* If you ever want name+button side by side, switch to:
+     grid-template-columns: 1fr auto; and they'll align nicely. */
+}
+/* ==== Modal form polish ==== */
+.modal .content form{
+  display:grid;
+  grid-template-columns: 1fr;   /* stack on mobile */
+  gap:12px;
+}
+
+/* Make label text above inputs (not inline) */
+.modal .content form label{
+  display:grid;
+  gap:6px;
+  font-weight:600;
+}
+
+/* Inputs full-width and consistent look in dark/light */
+.modal .content form input[type="email"],
+.modal .content form input[type="text"],
+.modal .content form textarea{
+  width:100%;
+  padding:12px 14px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:#fff;
+  color:var(--fg);
+  box-shadow: var(--shadow-sm);
+}
+@media (prefers-color-scheme: dark){
+  .modal .content form input[type="email"],
+  .modal .content form input[type="text"],
+  .modal .content form textarea{
+    background:#0f131a;
+    border-color: #1f2430;
+    color: var(--fg);
+  }
+}
+
+/* Better placeholder contrast in dark mode */
+.modal .content form ::placeholder{
+  color: color-mix(in srgb, var(--muted) 70%, transparent);
+}
+
+/* Focus state (no overflow glow) */
+.modal .content form input:focus,
+.modal .content form textarea:focus{
+  outline:none;
+  border-color: color-mix(in srgb, var(--accent) 60%, var(--border));
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+/* Button fills width on small screens; tightens next to fields on wide */
+.modal .content form button{
+  width:100%;
+}
+@media (min-width: 560px){
+  .modal .content form{
+    grid-template-columns: 1fr; /* keep stacked for clarity */
+  }
+  /* If you ever want name+button side by side, switch to:
+     grid-template-columns: 1fr auto; and they'll align nicely. */
+}
+
 </style>
 
 </head>
@@ -220,7 +341,7 @@
       </div>
       <div class="card step">
         <h3>3) Spend</h3>
-        <p class="muted">Use your balance like cash — anytime, anywhere.</p>
+        <p class="muted">Use your balance like cash anytime, anywhere.</p>
       </div>
     </div>
     <p class="muted" style="margin-top: .75rem;">That’s all we can share for now. Join for early updates and the full story.</p>
