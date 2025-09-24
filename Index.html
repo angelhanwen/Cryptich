@@ -296,6 +296,14 @@
   /* If you ever want name+button side by side, switch to:
      grid-template-columns: 1fr auto; and they'll align nicely. */
 }
+.site-footer{
+  padding: 32px var(--space);
+  text-align: center;
+  font-size: 14px;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  margin-top: 40px;
+}
 
 </style>
 
@@ -396,6 +404,12 @@
       </footer>
     </div>
   </div>
+
+  <footer class="site-footer">
+  <div class="container">
+    <p>© 2025 Cryptich. All rights reserved.</p>
+  </div>
+  </footer>
 
   <script>
     // Core behavior: gate opens modal & pre-fills email. Submission handled by Netlify redirect.
